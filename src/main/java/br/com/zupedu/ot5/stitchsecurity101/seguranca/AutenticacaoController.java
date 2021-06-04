@@ -1,6 +1,7 @@
 package br.com.zupedu.ot5.stitchsecurity101.seguranca;
 
 
+import br.com.zupedu.ot5.stitchsecurity101.usuario.Usuario;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -30,10 +31,11 @@ public class AutenticacaoController {
     @PostMapping
     public ResponseEntity<?> autenticar(@RequestBody AutenticacaoRequest request) {
         System.out.println(request);
+        Authentication authentication = request.paraAutenticacaoDoSpring();
+        Authentication authenticate = authenticationManager.authenticate(authentication);
 
-        Authentication authenticate = authenticationManager.authenticate(request.paraAutenticacaoDoSpring());
-
-        User principal = (User) authenticate.getPrincipal();
+        authenticate.getCredentials();
+        Usuario principal = (Usuario) authenticate.getPrincipal();
 
         String token = gerenciadorDeToken.geraToken(principal.getUsername());
         return ResponseEntity.ok(new TokenResponse(token));
